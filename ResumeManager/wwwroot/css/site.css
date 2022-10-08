@@ -16,3 +16,34 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+.customTable table {
+    width: 100%
+}
+
+.customTable thead {
+    width: calc(100%);
+}
+
+.customTable tbody {
+    display: block;
+    max-height: 340px;
+    overflow-y: auto;
+    overflow-x: hidden
+}
+
+    .customTable thead, .customTable tbody tr {
+        display: table;
+        width: 97%;
+        table-layout: fixed
+    }
+
+.customTable thead, .customTable tbody, .customTable td {
+    border: none !important
+}
+
+.YearsWorked {
+    background-image: none;
+}
+

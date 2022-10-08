@@ -4,15 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<style>
-    .customTable table{width:100%}
-    .customTable thead{width:calc(100%);}
-    .customTable tbody{display:block; max-height:340px;overflow-y:auto;overflow-x:hidden}
-    .customTable thead, .customTable tbody tr{display:table; width:97%; table-layout:fixed}
-    .customTable thead, .customTable tbody, .customTable td{border:none !important}
 
-    .YearsWorked{background-image:none;}
-</style>
 
 <h1>Applicant - Create</h1>
 
@@ -147,83 +139,5 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
-    <script type="text/javascript">
-        $(".custom-file-input").on("change", function () {            
-            var fileName = $(this).val().split("\\").pop();
-            //alert(fileName);
-            $(this).siblings(".custome-file-label").addClass("selected").html(filename);
-        });
-
-        function CalcTotalExperiences(){
-            var x = document.getElementsByClassName('YearsWorked');
-
-            var totalExp = 0;
-            var i = 0;
-
-            for(i = 0; i < x.length; i++)
-            {
-                totalExp = totalExp + eval(x[i].value);
-            }
-
-            document.getElementById('TotalExperience').value = totalExp;
-
-            return;
-        }
-
-        document.addEventListener('change', function (e){
-            if (e.target.classList.contains('YearsWorked')) {
-                CalcTotalExperiences();
-            }
-        }, false);
-
-
-        function AddItem(btn)
-        {
-            let table = document.getElementById("ExpTable");
-            let rows = table.getElementsByTagName('tr');            
-
-            let rowOuterHtml = rows[rows.length - 1].outerHTML;
-
-            var lastRowIdx = document.getElementById("hdnLastIndex").value;
-            var nextRowIdx = eval(lastRowIdx) + 1;
-            document.getElementById("hdnLastIndex").value = nextRowIdx;
-
-            rowOuterHtml = rowOuterHtml.replaceAll('_' + lastRowIdx + '_', '_' + nextRowIdx + '_');
-            rowOuterHtml = rowOuterHtml.replaceAll('[' + lastRowIdx + ']', '[' + nextRowIdx + ']');
-            rowOuterHtml = rowOuterHtml.replaceAll('-' + lastRowIdx, '-' + nextRowIdx);
-
-
-            var newRow = table.insertRow();
-            newRow.innerHTML = rowOuterHtml;
-
-
-            var btnAddId = btn.id;
-            var btnDeleteId = btnAddId.replaceAll('btnAdd', 'btnRemove');
-
-            var delBtn = document.getElementById(btnDeleteId);
-            delBtn.classList.add('visible');
-            delBtn.classList.remove('invisible');
-
-            var addBtn = document.getElementById(btnAddId);
-            addBtn.classList.remove('visible');
-            addBtn.classList.add('invisible');
-
-        }
-
-        function DeleteItem(btn)
-        {
-            var table = document.getElementById('ExpTable');
-            var rows = table.getElementsByTagName('tr');
-            if(rows.length == 2){
-                alert("This row cannot be deleted");
-                return;
-            }
-
-            $(btn).closest('tr').remove();
-
-            CalcTotalExperiences();
-        }
-
-
-    </script>
+    
 }
