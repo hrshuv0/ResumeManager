@@ -42,6 +42,9 @@ namespace ResumeManager.Controllers
         [HttpPost]
         public IActionResult Create(Applicant applicant)
         {
+            if(!ModelState.IsValid) return View(applicant);
+            ViewBag.Gender = GetGender();
+
             string uniqueFileName = GetUploadFileName(applicant);
             applicant.PhotoUrl = uniqueFileName;
 
@@ -51,32 +54,50 @@ namespace ResumeManager.Controllers
             return RedirectToAction("Index");
         }
 
-        private string GetUploadFileName(Applicant applicant)
+        
+
+        public IActionResult Details(int id)
         {
-            string uniqueFileName = null;
+            Applicant applicant = _dbContext.Applicants
+                .Include(e => e.Experiences).FirstOrDefault(a => a.Id == id)!;
+
+            return View(applicant);
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            Applicant applicant = _dbContext.Applicants
+                .Include(e => e.Experiences).FirstOrDefault(a => a.Id == id)!;
+
+            ViewBag.Gender = GetGender();
+
+            return View(applicant);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(Applicant applicant)
+        {
+            List<Experience> expDetails = _dbContext.Experiences.Where(e => e.ApplicantId == applicant.Id).ToList();
+            _dbContext.Experiences.RemoveRange(expDetails);
+            _dbContext.SaveChanges();
+
+
+            string uniqueFileName = GetUploadFileName(applicant);
 
             if(applicant.ProfilePhoto != null)
             {
-                string uploadFolder = Path.Combine(_webHostEnv.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString();
-                string filaPath = Path.Combine(uploadFolder, uniqueFileName);
-                using(var fileStream = new FileStream(filaPath, FileMode.Create))
-                {
-                    applicant.ProfilePhoto.CopyTo(fileStream);
-                }
+                applicant.PhotoUrl = GetUploadFileName(applicant);
             }
 
-            return uniqueFileName;
-        }
+            applicant.PhotoUrl = uniqueFileName;
 
-        public IActionResult Edit()
-        {
-            throw new NotImplementedException();
-        }
+            _dbContext.Applicants.Attach(applicant);
+            _dbContext.Entry(applicant).State = EntityState.Modified;
+            _dbContext.Experiences.AddRange(applicant.Experiences);
+            _dbContext.SaveChanges();
 
-        public IActionResult Details()
-        {
-            throw new NotImplementedException();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Delete(int id)
@@ -109,6 +130,24 @@ namespace ResumeManager.Controllers
             selectGender.Add(gender);
 
             return selectGender;
+        }
+
+        private string GetUploadFileName(Applicant applicant)
+        {
+            string uniqueFileName = null;
+
+            if (applicant.ProfilePhoto != null)
+            {
+                string uploadFolder = Path.Combine(_webHostEnv.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString();
+                string filaPath = Path.Combine(uploadFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filaPath, FileMode.Create))
+                {
+                    applicant.ProfilePhoto.CopyTo(fileStream);
+                }
+            }
+
+            return uniqueFileName;
         }
     }
 }

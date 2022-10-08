@@ -18,6 +18,8 @@ namespace ResumeManager.Models
         [Required]
         public int YearsWorked { get; set; }
 
-        
+        [NotMapped]
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

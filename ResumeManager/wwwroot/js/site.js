@@ -54,8 +54,17 @@
     newRow.innerHTML = rowOuterHtml;
 
 
+        var x = document.getElementsByTagName('INPUT');
 
+        for (var cnt = 0; cnt < x.length; cnt++) {
+            if (x[cnt].type == "text" && x[cnt].id.indexOf('_' + nextRowIdx + '_') > 0)
+                x[cnt].value = '';
+            else if (x[cnt].type == "number" && x[cnt].id.indexOf('_' + nextRowIdx + '_') > 0)
+                x[cnt].value = 0;
         }
+
+
+}
 
     function DeleteItem(btn)
     {
@@ -64,7 +73,8 @@
     if(rows.length == 2){
         alert("This row cannot be deleted");
     return;
-            }
+        }
+
 
     $(btn).closest('tr').remove();
 

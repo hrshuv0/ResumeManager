@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ResumeManager.Models
@@ -28,10 +29,11 @@ namespace ResumeManager.Models
 
         public virtual List<Experience> Experiences { get; set; } = new List<Experience>();
 
-        public string PhotoUrl { get; set; }
-        [Required(ErrorMessage ="please choose the photo")]
+        public string? PhotoUrl { get; set; }
+        //[Required(ErrorMessage ="please choose the photo")]
         [Display(Name ="Profile Photo")]
         [NotMapped]
+        [ValidateNever]
         public IFormFile ProfilePhoto { get; set; }
 
 

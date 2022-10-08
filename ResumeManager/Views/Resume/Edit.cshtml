@@ -1,21 +1,24 @@
-﻿ @model Applicant
+﻿@model ResumeManager.Models.Applicant
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
 
 
-<h1>Applicant - Create</h1>
+<h1>Applicant - Edit</h1>
 
 <hr />
 
 <div class="col-11 mx-auto pt-0">
     <div class="card p-2">
         <div class="card-header bg-primary text-uppercase text-white" style="height:45px">
-            <h4>Create Applicant</h4>
+            <h4>Edit Applicant</h4>
         </div>
-        <form asp-action="Create" enctype="multipart/form-data" asp-antiforgery="true">
+        <form asp-action="Edit" enctype="multipart/form-data" asp-antiforgery="true">
+
+            <input type="hidden" asp-for="Id"/>
+            <input type="hidden" asp-for="PhotoUrl"/>
 
             <div class="row">
                 <div class="col-6">
@@ -57,15 +60,16 @@
 
                 <div class="col-md-6 btn-group">
                     <div class="form-group col-8 p-0">
+                        <label asp-for="ProfilePhoto" class="control-label"></label>
                         <div class="custom-file">
-                            <input asp-for="ProfilePhoto" class="" id="customFile" 
-                            onchange="document.getElementById('PreviewPhoto').src = window.URL.createObjectURL(this.files[0])"/>
-                            
+                            <input asp-for="ProfilePhoto" class="custom-file-input" id="customFile" 
+                            onchange="document.getElementById('PreviewPhoto').src = window.URL.createObjectURL(this)"/>
+                            <label class="custom-file-label" for="customFile">Choose file</label>
                         </div>
                         <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
                     </div>
                     <div class="form-group col-4">
-                        <img id="PreviewPhoto" src="~/images/noimage.png" alt="Logo Image"
+                        <img id="PreviewPhoto" src="~/images/@Model.PhotoUrl" alt="Logo Image"
                         width="125" height="125" style="border:1px;margin-top:20px"/>
                     </div>
                 </div>
@@ -101,6 +105,7 @@
                                     @Html.EditorFor(x => x.Experiences[i].Designation, new{ htmlAttributeS = new { @class="form-control" } })
                                 </td>
                                 <td>
+                                    <input type="hidden" asp-for="@Model.Experiences[i].IsDeleted">
                                     @*<input asp-for="@item.YearsWorked" class="form-control">*@
                                     <input asp-for="@Model.Experiences[i].YearsWorked" class="form-control YearsWorked" />
                                     @*@Html.EditorFor(x => x.Experiences[i].YearsWorked, new{ htmlAttributeS = new { @class="form-control" } })*@
@@ -123,7 +128,7 @@
 
 
             <div class="form-group mt-2">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>           
         
